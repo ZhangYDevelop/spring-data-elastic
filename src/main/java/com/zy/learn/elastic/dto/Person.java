@@ -2,6 +2,8 @@ package com.zy.learn.elastic.dto;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 
@@ -15,13 +17,26 @@ public class Person implements Serializable {
     @Id
     private String id ;
 
-
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String name;
 
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private int age;
 
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String provience;
 
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String describe;
+
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
 
     public String getId() {
         return id;
