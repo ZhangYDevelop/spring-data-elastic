@@ -5,3 +5,13 @@ spring:
   elasticsearch:
     rest:
       uris: 192.168.106.116:9200
+  application:
+    name: spring data elasticsearch
+
+# ===== swagger3 配置 ===== #
+swagger:
+  enable: true
+  application-name: ${spring.application.name}
+  application-version: 1.0
+  application-description: elasticsearch
+  try-host: http://localhost:${server.port}

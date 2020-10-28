@@ -1,5 +1,6 @@
 package com.zy.learn.elastic.service;
 
+import com.zy.learn.elastic.dto.Person;
 import com.zy.learn.elastic.repository.PersonRespository;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -11,10 +12,15 @@ import org.elasticsearch.indices.TermsLookup;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @SuppressWarnings("all")
@@ -26,12 +32,17 @@ public class ElasticSearchCommonService {
     /**
      * 查询所有文档
      *
-     * @author yuhh
+     * *
      * @date 2020/3/16 13:52
      */
-    public void matchAllQuery() {
+    public List<Person> matchAllQuery() {
+        List<Person> list = new ArrayList<>();
         QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
-        baseElasticsearchService.search(queryBuilder);
+        Iterator<Person> personIterable = baseElasticsearchService.search(queryBuilder).iterator();
+        while (personIterable.hasNext()) {
+            list.add(personIterable.next());
+        }
+        return  list;
     }
 
     /**
@@ -48,13 +59,16 @@ public class ElasticSearchCommonService {
      * }
      * }
      * }
-     *
-     * @author yuhh
      * @date 2020/3/16 13:52
      */
-    public void matchQuery() {
-        QueryBuilder queryBuilder = QueryBuilders.matchQuery("待查询的字段", "待查询的值");
-        baseElasticsearchService.search(queryBuilder);
+    public List<Person> matchQuery(String fild, String text) {
+        QueryBuilder queryBuilder = QueryBuilders.matchQuery(fild, text);
+        Iterator<Person> personIterable = baseElasticsearchService.search(queryBuilder).iterator();
+        List<Person> list = new ArrayList<>();
+        while (personIterable.hasNext()) {
+            list.add(personIterable.next());
+        }
+        return  list;
     }
 
     /**
@@ -73,12 +87,17 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/16 13:52
      */
-    public void commonTermsQuery() {
-        QueryBuilder queryBuilder = QueryBuilders.commonTermsQuery("待查询的字段", "待查询的值");
-        baseElasticsearchService.search(queryBuilder);
+    public  List<Person> commonTermsQuery(String fild, String text) {
+        QueryBuilder queryBuilder = QueryBuilders.matchQuery(fild, text);
+        Iterator<Person> personIterable = baseElasticsearchService.search(queryBuilder).iterator();
+        List<Person> list = new ArrayList<>();
+        while (personIterable.hasNext()) {
+            list.add(personIterable.next());
+        }
+        return  list;
     }
 
     /**
@@ -96,7 +115,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/16 18:11
      */
     public void multiMatchQuery() {
@@ -118,7 +137,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 15:27
      */
     public void matchPhraseQuery() {
@@ -141,7 +160,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 15:43
      */
     public void matchPhrasePrefix() {
@@ -165,7 +184,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 15:52
      */
     public void disMaxQuery() {
@@ -185,7 +204,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 16:02
      */
     public void idsQuery() {
@@ -209,7 +228,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 16:24
      */
     public void termQuery() {
@@ -259,7 +278,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 16:51
      */
     public void prefixQuery() {
@@ -284,7 +303,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 17:48
      */
     public void rangeQuery() {
@@ -309,7 +328,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/17 18:02
      */
     public void wildcardQuery() {
@@ -332,7 +351,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 10:48
      */
     public void regexpQuery() {
@@ -355,7 +374,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 11:04
      */
     public void queryStringQuery() {
@@ -382,7 +401,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 11:04
      */
     public void simpleQueryStringQuery() {
@@ -414,7 +433,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 14:26
      */
     public void boostingQuery() {
@@ -450,7 +469,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 15:14
      */
     public void boolQuery() {
@@ -477,7 +496,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 15:33
      */
     public void spanTermQuery() {
@@ -502,7 +521,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 15:51
      */
     public void spanFirstQuery() {
@@ -530,7 +549,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 16:15
      */
     public void spanNearQuery() {
@@ -567,7 +586,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 16:28
      */
     public void spanNotQuery() {
@@ -592,7 +611,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 17:12
      */
     public void spanOrQuery() {
@@ -642,7 +661,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 17:27
      */
     public void spanWithinQuery() {
@@ -695,7 +714,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 17:40
      */
 
@@ -722,7 +741,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 17:54
      */
     public void spanMultiTermQueryBuilder() {
@@ -765,7 +784,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 18:05
      */
     public void fieldMaskingSpanQuery() {
@@ -790,7 +809,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/18 18:19
      */
     public void constantScoreQuery() {
@@ -813,7 +832,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/19 14:09
      */
     public void functionScoreQueryNoFunction() {
@@ -826,7 +845,7 @@ public class ElasticSearchCommonService {
      * 查询满足条件的文档并对_source进行计算
      * 这个太过复杂，详情请看https://www.jianshu.com/p/f164f127bf33
      *
-     * @author yuhh
+     * *
      * @date 2020/3/19 15:02
      */
     public void functionScoreQuery() {
@@ -861,7 +880,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/19 18:00
      */
     public void moreLikeThisQuery() {
@@ -890,7 +909,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/27 17:32
      */
     public void nestedQuery() {
@@ -915,7 +934,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/27 17:42
      */
     public void termsQuery() {
@@ -939,7 +958,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/27 17:55
      */
     public void wrapperQuery() {
@@ -959,7 +978,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/27 18:01
      */
     public void typeQuery() {
@@ -985,7 +1004,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/30 10:48
      */
     public void termsLookupQuery() {
@@ -1014,7 +1033,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/30 11:22
      */
     public void scriptQuery() {
@@ -1038,7 +1057,7 @@ public class ElasticSearchCommonService {
      * }
      * }
      *
-     * @author yuhh
+     * *
      * @date 2020/3/30 16:17
      */
     public void existsQuery() {

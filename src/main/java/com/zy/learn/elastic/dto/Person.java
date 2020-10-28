@@ -20,7 +20,6 @@ public class Person implements Serializable {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String name;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private int age;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
