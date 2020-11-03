@@ -50,7 +50,24 @@ public class ElasticSearchTemplateService {
      * 删除索引
      * @return
      */
-    public boolean deleteIndex() {
-        return  elasticsearchRestTemplate.deleteIndex(Person.class);
+    public boolean deleteIndex(Class<?> clazz) {
+        return  elasticsearchRestTemplate.deleteIndex(clazz);
+    }
+
+    /**
+     * 创建索引
+     * @return
+     */
+    public boolean createIndex(Class<?> clazz) {
+        return elasticsearchRestTemplate.createIndex(clazz);
+    }
+
+    /**
+     * 判断索引是否存在
+     * @param clazz
+     * @return
+     */
+    public boolean existIndex (Class<?> clazz) {
+        return  elasticsearchRestTemplate.indexExists(clazz);
     }
 }

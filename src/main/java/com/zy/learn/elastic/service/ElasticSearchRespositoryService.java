@@ -87,9 +87,9 @@ public class ElasticSearchRespositoryService {
 
         // 组合查询，boost即为权重，数值越大，权重越大
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                .should(QueryBuilders.multiMatchQuery(keyWords, "name").boost(3))
-                .should(QueryBuilders.multiMatchQuery(keyWords, "provience").boost(2))
-                .should(QueryBuilders.multiMatchQuery(keyWords, "describe").boost(1));
+                .should(QueryBuilders.multiMatchQuery(keyWords, "name"))
+                .should(QueryBuilders.multiMatchQuery(keyWords, "provience"))
+                .should(QueryBuilders.multiMatchQuery(keyWords, "describe"));
 
         // 高亮设置
         queryBuilder.withHighlightFields(
