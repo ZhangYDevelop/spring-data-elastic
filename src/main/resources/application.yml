@@ -4,7 +4,7 @@ server:
 spring:
   elasticsearch:
     rest:
-      uris: 192.168.106.116:9200
+      uris: 192.168.0.102:9200
   application:
     name: spring data elasticsearch
 
