@@ -62,12 +62,17 @@ public class ElasticSearchTemplateService {
         return  elasticsearchRestTemplate.deleteIndex(clazz);
     }
 
+
+
     /**
      * 判断索引是否存在
+     * @param clazz
      * @return
      */
-    public boolean existIndex(Class<?> clazz) {
-        return  elasticsearchRestTemplate.createIndex(clazz);
+    public boolean existIndex (Class<?> clazz) {
+        return  elasticsearchRestTemplate.indexExists(clazz);
     }
+
+
 
 }
