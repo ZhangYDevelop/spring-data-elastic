@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @AUTHOR zhangy
@@ -17,17 +18,30 @@ public class Person implements Serializable {
     @Id
     private String id ;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @Field(type = FieldType.Text)
     private String name;
 
+    @Field(type = FieldType.Text)
     private int age;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @Field(type = FieldType.Text)
     private String provience;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @Field(type = FieldType.Keyword)
     private String describe;
 
+
+    @Field(type = FieldType.Keyword)
+    private List<String> kemu;
+
+
+    public List<String> getKemu() {
+        return kemu;
+    }
+
+    public void setKemu(List<String> kemu) {
+        this.kemu = kemu;
+    }
 
     public String getDescribe() {
         return describe;

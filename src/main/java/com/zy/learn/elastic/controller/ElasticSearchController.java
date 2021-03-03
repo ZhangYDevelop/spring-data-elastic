@@ -93,4 +93,10 @@ public class ElasticSearchController {
     private ResponseEntity<Page<Person>> getPersonByPageAndKeyWorkHeighLight (int page, int size, String keyWork) {
         return  ResponseEntity.ok(elasticSearchService.getPersonByPageAndKeyWorkHeighLight(page, size, keyWork));
     }
+
+    @ApiOperation(value = "ceshi")
+    @GetMapping("/test")
+    private ResponseEntity<List<Person>> getPersonListByRespository () {
+        return  ResponseEntity.ok(elasticSearchService.test());
+    }
 }

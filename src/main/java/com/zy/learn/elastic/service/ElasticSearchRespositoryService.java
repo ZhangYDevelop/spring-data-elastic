@@ -4,6 +4,7 @@ import com.zy.learn.elastic.dto.Person;
 import com.zy.learn.elastic.repository.PersonRespository;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -120,5 +122,30 @@ public class ElasticSearchRespositoryService {
         }
 
         return new PageImpl<>(pageInfo, PageRequest.of(page,size), search.getTotalHits());
+    }
+
+    public List<Person> test() {
+
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        List<String> userAuthList = Arrays.asList("111111","9999999999","7777777777");
+        for (String auth : userAuthList) {
+            boolQueryBuilder.should(QueryBuilders.wildcardQuery("kemu", auth));
+        }
+
+        queryBuilder.withQuery(boolQueryBuilder);
+
+        SearchHits<Person> search = elasticsearchRestTemplate.search(queryBuilder.build(), Person.class);
+        List<SearchHit<Person>> searchHits = search.getSearchHits();
+
+        List<Person> pageInfo = new ArrayList<>();
+        //遍历返回的内容进行处理
+        for(SearchHit<Person> searchHit:searchHits){
+            pageInfo.add(searchHit.getContent());
+        }
+
+        return pageInfo;
     }
 }
